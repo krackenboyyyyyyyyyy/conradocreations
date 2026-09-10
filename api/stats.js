@@ -1,12 +1,12 @@
 // /api/stats.js — Vercel serverless function
 // Usage:
-//   /api/stats?type=group&groupId=936632772          → group info
-//   /api/stats?type=groupGames&groupId=936632772      → group info + all public games' stats
-//   /api/stats?type=game&placeId=920587237             → single game stats
+//   /api/stats?type=group&groupId=936632772
+//   /api/stats?type=groupGames&groupId=936632772
+//   /api/stats?type=game&placeId=920587237
 
 export default async function handler(req, res) {
   const { type, placeId, universeId, groupId: groupIdParam } = req.query;
-  const groupId = groupIdParam || "936632772"; // defaults to your group
+  const groupId = groupIdParam || "936632772";
 
   try {
     if (type === "game") {
@@ -42,14 +42,10 @@ async function getGroupInfo(groupId) {
   if (!r.ok) throw new Error("Group not found.");
   const g = await r.json();
   return {
-    id: g.id,
-    name: g.name,
     memberCount: g.memberCount,
-    owner: g.owner?.username,
   };
 }
 
-// Paginates through every public game owned by the group, collecting universe IDs.
 async function getAllPublicGameIds(groupId) {
   let ids = [];
   let cursor = "";
@@ -60,14 +56,13 @@ async function getAllPublicGameIds(groupId) {
     if (!r.ok) throw new Error("Could not fetch group's games.");
     const data = await r.json();
 
-    ids = ids.concat((data.data || []).map((g) => g.id)); // g.id is the universeId
+    ids = ids.concat((data.data || []).map((g) => g.id));
     cursor = data.nextPageCursor || "";
   } while (cursor);
 
   return ids;
 }
 
-// Fetches core stats + votes for a batch of universeIds (comma-separated, up to ~100 at a time).
 async function getStatsForUniverseIds(universeIds) {
   const chunks = chunkArray(universeIds, 100);
   let results = [];
@@ -87,19 +82,13 @@ async function getStatsForUniverseIds(universeIds) {
     for (const game of gamesData) {
       const votes = votesById[game.id] || { upVotes: 0, downVotes: 0 };
       const totalVotes = votes.upVotes + votes.downVotes;
-      const likeRatio = totalVotes > 0 ? votes.upVotes / totalVotes : null;
-      const ccuVisitRatio = game.visits > 0 ? game.playing / game.visits : null;
+      const likeRatio = totalVotes > 0 ? Math.round((votes.upVotes / totalVotes) * 100) + "%" : "—";
 
       results.push({
-        universeId: game.id,
         name: game.name,
-        playing: game.playing,
         visits: game.visits,
-        favoritedCount: game.favoritedCount,
-        upVotes: votes.upVotes,
-        downVotes: votes.downVotes,
+        playing: game.playing,
         likeRatio,
-        ccuVisitRatio,
       });
     }
   }
@@ -117,8 +106,8 @@ async function getGameStats({ placeId, universeId }) {
     uid = (await uRes.json()).universeId;
   }
 
-  const [gamesRes, votesRes] = await getStatsForUniverseIds([uid]);
-  return gamesRes; // single object since getStatsForUniverseIds returns an array — see note below
+  const results = await getStatsForUniverseIds([uid]);
+  return results[0];
 }
 
 function chunkArray(arr, size) {
