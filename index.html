@@ -4,41 +4,103 @@
 <meta charset="UTF-8">
 <title>Group Stats</title>
 <style>
+  * { box-sizing: border-box; }
   body {
     margin: 0;
     min-height: 100vh;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: linear-gradient(120deg, #05050a, #1a0b2e, #05050a, #0b1a2e, #05050a);
-    background-size: 400% 400%;
-    animation: drift 10s ease-in-out infinite;
-    color: #fff;
-    padding: 40px 20px;
-    box-sizing: border-box;
+    background: #050506;
+    color: #eef1f6;
+    padding: 60px 20px;
+    position: relative;
+    overflow-x: hidden;
   }
-  @keyframes drift {
-    0%   { background-position: 0% 50%; }
-    50%  { background-position: 100% 50%; }
-    100% { background-position: 0% 50%; }
+
+  /* very subtle drifting glow — small, soft, low opacity, not covering the page */
+  body::before {
+    content: "";
+    position: fixed;
+    top: -10%;
+    left: 50%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(236,72,153,0.10) 0%, rgba(59,130,246,0.07) 45%, transparent 70%);
+    filter: blur(60px);
+    transform: translateX(-50%);
+    animation: shine 9s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
   }
-  h1 { text-align: center; font-size: 22px; margin-bottom: 30px; }
-  .members { text-align: center; font-size: 16px; margin-bottom: 30px; opacity: 0.9; }
-  .members b { font-size: 22px; }
-  .games { max-width: 500px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+  @keyframes shine {
+    0%   { transform: translate(-70%, 0); opacity: 0.6; }
+    50%  { transform: translate(-30%, 40px); opacity: 1; }
+    100% { transform: translate(-70%, 0); opacity: 0.6; }
+  }
+
+  .wrap { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
+
+  .badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: #60a5fa;
+    background: rgba(96,165,250,0.08);
+    border: 1px solid rgba(96,165,250,0.25);
+    padding: 5px 12px;
+    border-radius: 999px;
+    margin-bottom: 20px;
+  }
+
+  h1 { font-size: 30px; font-weight: 800; margin: 0 0 8px 0; letter-spacing: -0.02em; }
+  .subtitle { color: #8b93a3; font-size: 14px; margin-bottom: 32px; }
+
+  .stat-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 1px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+  .stat-cell { background: #0a0a0c; text-align: center; padding: 22px 10px; }
+  .stat-cell .num { font-size: 26px; font-weight: 800; color: #fff; }
+  .stat-cell .lbl { font-size: 11px; color: #8b93a3; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+
+  .games { display: flex; flex-direction: column; gap: 14px; }
   .game {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 10px;
-    padding: 14px 18px;
-    backdrop-filter: blur(4px);
+    background: #0a0a0c;
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 20px 22px;
+    transition: border-color 0.2s ease;
   }
-  .game .name { font-weight: 600; margin-bottom: 8px; }
-  .row { display: flex; justify-content: space-between; font-size: 14px; opacity: 0.85; }
+  .game:hover { border-color: rgba(96,165,250,0.35); }
+  .game .name { font-size: 16px; font-weight: 700; margin-bottom: 14px; }
+  .game .row { display: flex; gap: 22px; flex-wrap: wrap; }
+  .game .metric { display: flex; flex-direction: column; gap: 2px; }
+  .game .metric .v { font-size: 15px; font-weight: 700; color: #fff; }
+  .game .metric .k { font-size: 11px; color: #8b93a3; text-transform: uppercase; letter-spacing: 0.04em; }
 </style>
 </head>
 <body>
-  <h1>Group Stats</h1>
-  <div class="members">Members: <b id="memberCount">—</b></div>
-  <div class="games" id="games"></div>
+  <div class="wrap">
+    <div class="badge">Live Group Stats</div>
+    <h1>Group Overview</h1>
+    <div class="subtitle">Member count and public game performance, pulled live.</div>
+
+    <div class="stat-row">
+      <div class="stat-cell">
+        <div class="num" id="memberCount">—</div>
+        <div class="lbl">Members</div>
+      </div>
+    </div>
+
+    <div class="games" id="games"></div>
+  </div>
 
   <script>
     fetch("/api/stats?type=groupGames&groupId=936632772")
@@ -52,15 +114,18 @@
           div.className = "game";
           div.innerHTML = `
             <div class="name">${g.name}</div>
-            <div class="row"><span>Visits</span><span>${g.visits.toLocaleString()}</span></div>
-            <div class="row"><span>Playing</span><span>${g.playing.toLocaleString()}</span></div>
-            <div class="row"><span>Like Ratio</span><span>${g.likeRatio}</span></div>
+            <div class="row">
+              <div class="metric"><div class="v">${g.visits.toLocaleString()}</div><div class="k">Visits</div></div>
+              <div class="metric"><div class="v">${g.playing.toLocaleString()}</div><div class="k">Playing</div></div>
+              <div class="metric"><div class="v">${g.likeRatio}</div><div class="k">Like Ratio</div></div>
+            </div>
           `;
           container.appendChild(div);
         });
       })
       .catch(err => {
-        document.getElementById("memberCount").textContent = "Error: " + err.message;
+        document.getElementById("memberCount").textContent = "Error";
+        document.getElementById("games").innerHTML = `<div style="color:#f87171;font-size:13px;">${err.message}</div>`;
       });
   </script>
 </body>
