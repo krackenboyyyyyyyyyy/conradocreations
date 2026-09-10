@@ -120,3 +120,11 @@ async function getGameStats({ placeId, universeId }) {
   const [gamesRes, votesRes] = await getStatsForUniverseIds([uid]);
   return gamesRes; // single object since getStatsForUniverseIds returns an array — see note below
 }
+
+function chunkArray(arr, size) {
+  const chunks = [];
+  for (let i = 0; i < arr.length; i += size) {
+    chunks.push(arr.slice(i, i + size));
+  }
+  return chunks;
+}
