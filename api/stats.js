@@ -5,6 +5,10 @@
 //   /api/stats?type=game&placeId=920587237
 
 export default async function handler(req, res) {
+  // Enable CORS so your frontend can call this without blockages
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET");
+
   const { type, placeId, universeId, groupId: groupIdParam } = req.query;
   const groupId = groupIdParam || "936632772";
 
@@ -41,9 +45,25 @@ async function getGroupInfo(groupId) {
   const r = await fetch(`https://groups.roblox.com/v1/groups/${groupId}`);
   if (!r.ok) throw new Error("Group not found.");
   const g = await r.json();
+
+  // Fetch group icon thumbnail
+  let icon = null;
+  try {
+    const iconRes = await fetch(
+      `https://thumbnails.roblox.com/v1/groups/icons?groupIds=${groupId}&size=150x150&format=Png&isCircular=false`
+    );
+    if (iconRes.ok) {
+      const iconData = await iconRes.json();
+      icon = iconData.data?.[0]?.imageUrl || null;
+    }
+  } catch (_) {
+    // Fall back gracefully if thumbnail API fails
+  }
+
   return {
     name: g.name,
     memberCount: g.memberCount,
+    icon,
   };
 }
 
@@ -107,6 +127,7 @@ async function getStatsForUniverseIds(universeIds) {
 
       results.push({
         name: game.name,
+        placeId: game.rootPlaceId, // Added rootPlaceId so game links work in HTML
         icon: iconsById[game.id] || null,
         visits: game.visits,
         playing: game.playing,
