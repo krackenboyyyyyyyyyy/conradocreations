@@ -8,9 +8,21 @@
   html { scroll-behavior: smooth; }
   body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    background: #050506;
+    background:
+      radial-gradient(circle at 15% 20%, rgba(30,8,20,0.55) 0%, transparent 40%),
+      radial-gradient(circle at 85% 65%, rgba(6,10,30,0.6) 0%, transparent 45%),
+      #050506;
     color: #eef1f6;
     position: relative;
+    overflow-x: hidden;
+  }
+
+  #starCanvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    pointer-events: none;
   }
 
   body::before {
@@ -45,13 +57,7 @@
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255,255,255,0.08);
   }
-  nav a {
-    color: #cdd3de;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-  }
+  nav a { color: #cdd3de; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: 0.02em; }
   nav a:hover { color: #60a5fa; }
 
   section {
@@ -79,13 +85,7 @@
     border-radius: 999px;
     margin-bottom: 24px;
   }
-  #groupName {
-    font-size: 56px;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    margin-bottom: 32px;
-    max-width: 800px;
-  }
+  #groupName { font-size: 56px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 32px; max-width: 800px; }
   .stat-row {
     display: flex;
     gap: 1px;
@@ -94,7 +94,7 @@
     border-radius: 14px;
     overflow: hidden;
   }
-  .stat-cell { background: #0a0a0c; text-align: center; padding: 22px 32px; }
+  .stat-cell { background: rgba(10,10,12,0.7); text-align: center; padding: 22px 32px; }
   .stat-cell .num { font-size: 26px; font-weight: 800; color: #fff; }
   .stat-cell .lbl { font-size: 11px; color: #8b93a3; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
 
@@ -102,32 +102,26 @@
   .section-sub { color: #8b93a3; font-size: 14px; margin-bottom: 40px; }
   .games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 18px;
-    max-width: 900px;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 14px;
+    max-width: 700px;
     width: 100%;
   }
   .game-card {
-    background: #0a0a0c;
+    background: rgba(10,10,12,0.7);
     border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 16px;
+    border-radius: 12px;
     overflow: hidden;
     transition: border-color 0.2s ease, transform 0.2s ease;
   }
   .game-card:hover { border-color: rgba(96,165,250,0.35); transform: translateY(-3px); }
-  .game-card img {
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    object-fit: cover;
-    display: block;
-    background: #111;
-  }
-  .game-card .info { padding: 14px 16px; }
-  .game-card .name { font-size: 14px; font-weight: 700; margin-bottom: 10px; }
-  .game-card .row { display: flex; gap: 14px; flex-wrap: wrap; }
-  .game-card .metric { display: flex; flex-direction: column; gap: 2px; }
-  .game-card .metric .v { font-size: 13px; font-weight: 700; color: #fff; }
-  .game-card .metric .k { font-size: 10px; color: #8b93a3; text-transform: uppercase; letter-spacing: 0.04em; }
+  .game-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; background: #111; }
+  .game-card .info { padding: 10px 12px; }
+  .game-card .name { font-size: 12px; font-weight: 700; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .game-card .row { display: flex; gap: 10px; flex-wrap: wrap; }
+  .game-card .metric { display: flex; flex-direction: column; gap: 1px; }
+  .game-card .metric .v { font-size: 11px; font-weight: 700; color: #fff; }
+  .game-card .metric .k { font-size: 8px; color: #8b93a3; text-transform: uppercase; letter-spacing: 0.04em; }
 
   #contact { text-align: center; }
   .discord-btn {
@@ -148,6 +142,8 @@
 </style>
 </head>
 <body>
+
+  <canvas id="starCanvas"></canvas>
 
   <nav>
     <a href="#home">Home</a>
@@ -213,6 +209,62 @@
         document.getElementById("groupName").textContent = "Error loading stats";
         document.getElementById("gamesGrid").innerHTML = `<div style="color:#f87171;font-size:13px;">${err.message}</div>`;
       });
+
+    // star field: subtle dots that spread away from the cursor
+    const canvas = document.getElementById("starCanvas");
+    const ctx = canvas.getContext("2d");
+    let w, h, stars;
+    const mouse = { x: -9999, y: -9999 };
+
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = document.body.scrollHeight;
+      const count = Math.floor((w * h) / 9000);
+      stars = Array.from({ length: count }, () => {
+        const x = Math.random() * w;
+        const y = Math.random() * h;
+        return { x, y, baseX: x, baseY: y, r: Math.random() * 1.2 + 0.4 };
+      });
+    }
+
+    window.addEventListener("resize", resize);
+    window.addEventListener("mousemove", (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY + window.scrollY;
+    });
+    window.addEventListener("mouseleave", () => {
+      mouse.x = -9999;
+      mouse.y = -9999;
+    });
+
+    function animate() {
+      ctx.clearRect(0, 0, w, h);
+      ctx.fillStyle = "rgba(255,255,255,0.6)";
+
+      for (const s of stars) {
+        const dx = s.x - mouse.x;
+        const dy = s.y - mouse.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const repelRadius = 90;
+
+        if (dist < repelRadius) {
+          const force = (repelRadius - dist) / repelRadius;
+          s.x += (dx / dist) * force * 6;
+          s.y += (dy / dist) * force * 6;
+        } else {
+          s.x += (s.baseX - s.x) * 0.05;
+          s.y += (s.baseY - s.y) * 0.05;
+        }
+
+        ctx.beginPath();
+        ctx.arc(s.x, s.y - window.scrollY, s.r, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      requestAnimationFrame(animate);
+    }
+
+    resize();
+    animate();
   </script>
 </body>
 </html>
