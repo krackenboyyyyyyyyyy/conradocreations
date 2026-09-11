@@ -45,18 +45,29 @@
     100% { transform: translate(-70%, 0); opacity: 0.6; }
   }
 
-  nav {
+  header {
     position: sticky;
     top: 0;
     z-index: 10;
     display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 32px;
-    padding: 18px 20px;
+    padding: 14px 20px;
     background: rgba(5,5,6,0.85);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255,255,255,0.08);
   }
+  .header-inner {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; }
+  .brand img { width: 28px; height: 28px; border-radius: 6px; object-fit: cover; background: #111; }
+  .brand span { font-size: 14px; font-weight: 700; }
+  nav { display: flex; gap: 28px; }
   nav a { color: #cdd3de; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: 0.02em; }
   nav a:hover { color: #60a5fa; }
 
@@ -102,26 +113,32 @@
   .section-sub { color: #8b93a3; font-size: 14px; margin-bottom: 40px; }
   .games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 14px;
-    max-width: 700px;
+    grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
+    gap: 8px;
+    max-width: 500px;
     width: 100%;
   }
   .game-card {
     background: rgba(10,10,12,0.7);
     border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 12px;
+    border-radius: 8px;
     overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    display: block;
     transition: border-color 0.2s ease, transform 0.2s ease;
   }
-  .game-card:hover { border-color: rgba(96,165,250,0.35); transform: translateY(-3px); }
+  .game-card:hover { border-color: rgba(96,165,250,0.35); transform: translateY(-2px); }
   .game-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; background: #111; }
-  .game-card .info { padding: 10px 12px; }
-  .game-card .name { font-size: 12px; font-weight: 700; margin-bottom: 8px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .game-card .row { display: flex; gap: 10px; flex-wrap: wrap; }
-  .game-card .metric { display: flex; flex-direction: column; gap: 1px; }
-  .game-card .metric .v { font-size: 11px; font-weight: 700; color: #fff; }
-  .game-card .metric .k { font-size: 8px; color: #8b93a3; text-transform: uppercase; letter-spacing: 0.04em; }
+  .game-card .info { padding: 4px 5px; }
+  .game-card .name {
+    font-size: 8px; font-weight: 700; margin-bottom: 3px;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .game-card .row { display: flex; gap: 5px; flex-wrap: wrap; }
+  .game-card .metric { display: flex; flex-direction: column; gap: 0; }
+  .game-card .metric .v { font-size: 7px; font-weight: 700; color: #fff; }
+  .game-card .metric .k { font-size: 6px; color: #8b93a3; text-transform: uppercase; }
 
   #contact { text-align: center; }
   .discord-btn {
@@ -136,20 +153,44 @@
     padding: 14px 28px;
     border-radius: 10px;
     margin-top: 20px;
+    margin-bottom: 50px;
     transition: opacity 0.2s ease;
   }
   .discord-btn:hover { opacity: 0.88; }
+
+  .team-label { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #8b93a3; margin-bottom: 16px; }
+  .team-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    background: rgba(10,10,12,0.7);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 14px;
+    padding: 14px 20px;
+  }
+  .team-card img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; background: #111; }
+  .team-card .details { text-align: left; }
+  .team-card .name { font-size: 15px; font-weight: 700; }
+  .team-card .role { font-size: 12px; color: #60a5fa; font-weight: 600; }
 </style>
 </head>
 <body>
 
   <canvas id="starCanvas"></canvas>
 
-  <nav>
-    <a href="#home">Home</a>
-    <a href="#games">Games</a>
-    <a href="#contact">Contact</a>
-  </nav>
+  <header>
+    <div class="header-inner">
+      <div class="brand">
+        <img id="groupIcon" src="" alt="">
+        <span id="brandName">Loading...</span>
+      </div>
+      <nav>
+        <a href="#home">Home</a>
+        <a href="#games">Games</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
 
   <section id="home">
     <div class="badge">Roblox Game Studio</div>
@@ -163,7 +204,7 @@
 
   <section id="games">
     <h2>Games</h2>
-    <div class="section-sub">Everything we've shipped, with live stats.</div>
+    <div class="section-sub">Everything we've shipped, with live stats. Click one to play.</div>
     <div class="games-grid" id="gamesGrid"></div>
   </section>
 
@@ -173,6 +214,15 @@
     <a class="discord-btn" href="https://discord.gg/8N4Cy77Znd" target="_blank" rel="noopener">
       Join our Discord
     </a>
+
+    <div class="team-label">The Team</div>
+    <div class="team-card">
+      <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Owner avatar">
+      <div class="details">
+        <div class="name">Owner</div>
+        <div class="role">Owner</div>
+      </div>
+    </div>
   </section>
 
   <script>
@@ -180,7 +230,9 @@
       .then(r => r.json())
       .then(data => {
         document.getElementById("groupName").textContent = data.group.name;
+        document.getElementById("brandName").textContent = data.group.name;
         document.getElementById("memberCount").textContent = data.group.memberCount.toLocaleString();
+        if (data.group.icon) document.getElementById("groupIcon").src = data.group.icon;
 
         const totalVisits = data.games.reduce((sum, g) => sum + g.visits, 0);
         const totalPlaying = data.games.reduce((sum, g) => sum + g.playing, 0);
@@ -189,16 +241,19 @@
 
         const grid = document.getElementById("gamesGrid");
         data.games.forEach(g => {
-          const card = document.createElement("div");
+          const card = document.createElement("a");
           card.className = "game-card";
+          card.href = g.placeId ? `https://www.roblox.com/games/${g.placeId}` : "#";
+          card.target = "_blank";
+          card.rel = "noopener";
           card.innerHTML = `
             <img src="${g.icon || ''}" alt="${g.name}">
             <div class="info">
               <div class="name">${g.name}</div>
               <div class="row">
                 <div class="metric"><div class="v">${g.visits.toLocaleString()}</div><div class="k">Visits</div></div>
-                <div class="metric"><div class="v">${g.playing.toLocaleString()}</div><div class="k">Playing</div></div>
-                <div class="metric"><div class="v">${g.likeRatio}</div><div class="k">Likes</div></div>
+                <div class="metric"><div class="v">${g.playing.toLocaleString()}</div><div class="k">Play</div></div>
+                <div class="metric"><div class="v">${g.likeRatio}</div><div class="k">Like</div></div>
               </div>
             </div>
           `;
@@ -210,19 +265,19 @@
         document.getElementById("gamesGrid").innerHTML = `<div style="color:#f87171;font-size:13px;">${err.message}</div>`;
       });
 
-    // star field: subtle dots that spread away from the cursor
     const canvas = document.getElementById("starCanvas");
     const ctx = canvas.getContext("2d");
-    let w, h, stars;
+    let vw, vh, docH, stars;
     const mouse = { x: -9999, y: -9999 };
 
     function resize() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = document.body.scrollHeight;
-      const count = Math.floor((w * h) / 9000);
+      vw = canvas.width = window.innerWidth;
+      vh = canvas.height = window.innerHeight;
+      docH = document.body.scrollHeight;
+      const count = Math.floor((vw * docH) / 9000);
       stars = Array.from({ length: count }, () => {
-        const x = Math.random() * w;
-        const y = Math.random() * h;
+        const x = Math.random() * vw;
+        const y = Math.random() * docH;
         return { x, y, baseX: x, baseY: y, r: Math.random() * 1.2 + 0.4 };
       });
     }
@@ -230,7 +285,7 @@
     window.addEventListener("resize", resize);
     window.addEventListener("mousemove", (e) => {
       mouse.x = e.clientX;
-      mouse.y = e.clientY + window.scrollY;
+      mouse.y = e.clientY;
     });
     window.addEventListener("mouseleave", () => {
       mouse.x = -9999;
@@ -238,26 +293,30 @@
     });
 
     function animate() {
-      ctx.clearRect(0, 0, w, h);
+      ctx.clearRect(0, 0, vw, vh);
       ctx.fillStyle = "rgba(255,255,255,0.6)";
+      const scrollY = window.scrollY;
+      const repelRadius = 160;
 
       for (const s of stars) {
+        const screenY = s.y - scrollY;
+        if (screenY < -20 || screenY > vh + 20) continue;
+
         const dx = s.x - mouse.x;
-        const dy = s.y - mouse.y;
+        const dy = screenY - mouse.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        const repelRadius = 90;
 
         if (dist < repelRadius) {
           const force = (repelRadius - dist) / repelRadius;
-          s.x += (dx / dist) * force * 6;
-          s.y += (dy / dist) * force * 6;
+          s.x += (dx / dist) * force * 8;
+          s.y += (dy / dist) * force * 8;
         } else {
-          s.x += (s.baseX - s.x) * 0.05;
-          s.y += (s.baseY - s.y) * 0.05;
+          s.x += (s.baseX - s.x) * 0.04;
+          s.y += (s.baseY - s.y) * 0.04;
         }
 
         ctx.beginPath();
-        ctx.arc(s.x, s.y - window.scrollY, s.r, 0, Math.PI * 2);
+        ctx.arc(s.x, s.y - scrollY, s.r, 0, Math.PI * 2);
         ctx.fill();
       }
       requestAnimationFrame(animate);
