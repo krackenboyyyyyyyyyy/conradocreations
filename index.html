@@ -201,7 +201,7 @@
   /* 290px Game Cards Grid */
   .games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, 290px); /* Exactly 290px cards */
+    grid-template-columns: repeat(auto-fill, 290px);
     justify-content: center;
     gap: 24px;
     max-width: 1000px;
@@ -221,8 +221,8 @@
     color: inherit;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    padding: 16px;
+    justify-content: flex-end;
+    padding: 20px;
     transform-style: preserve-3d;
     transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease;
     will-change: transform;
@@ -230,6 +230,45 @@
   .game-card:hover { 
     border-color: rgba(96,165,250,0.8); 
     box-shadow: 0 16px 32px rgba(0,0,0,0.8), 0 0 20px rgba(96,165,250,0.25);
+  }
+
+  /* Mysterious Game Card */
+  .game-card.mystery-card {
+    background: #030304;
+    border: 1px dashed rgba(255,255,255,0.2);
+    cursor: default;
+  }
+  .game-card.mystery-card:hover {
+    border-color: rgba(168,85,247,0.8);
+    box-shadow: 0 16px 32px rgba(0,0,0,0.9), 0 0 20px rgba(168,85,247,0.25);
+  }
+  .game-card.mystery-card .mystery-bg {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 96px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.03);
+    user-select: none;
+    z-index: 0;
+  }
+  .game-card.mystery-card .coming-soon-badge {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: rgba(168,85,247,0.15);
+    border: 1px solid rgba(168,85,247,0.4);
+    color: #c084fc;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 6px 12px;
+    border-radius: 99px;
+    z-index: 4;
+    transform: translateZ(10px);
   }
 
   .mouse-glow {
@@ -294,24 +333,6 @@
     z-index: 1;
   }
 
-  /* 2x Bigger Bold Game Card Elements */
-  .game-card .top-badge {
-    position: relative;
-    z-index: 4;
-    align-self: flex-start;
-    background: rgba(15,15,22,0.75);
-    border: 1px solid rgba(255,255,255,0.15);
-    backdrop-filter: blur(10px);
-    padding: 6px 12px;
-    border-radius: 99px;
-    font-size: 11px;
-    font-weight: 800;
-    letter-spacing: 0.06em;
-    color: #38bdf8;
-    text-transform: uppercase;
-    transform: translateZ(10px);
-  }
-
   .game-card .info { 
     position: relative;
     z-index: 4;
@@ -319,7 +340,7 @@
   }
 
   .game-card .name {
-    font-size: 20px; /* 2x Bigger Title */
+    font-size: 20px;
     font-weight: 900; 
     margin-bottom: 12px;
     color: #ffffff;
@@ -343,7 +364,7 @@
     border: 1px solid rgba(255,255,255,0.12);
   }
   .game-card .metric-pill .v { 
-    font-size: 18px; /* 2x Bigger Stats */
+    font-size: 18px; 
     font-weight: 900; 
     color: #fff; 
   }
@@ -378,6 +399,15 @@
   }
 
   .team-label { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #8b93a3; margin-bottom: 20px; }
+  
+  .team-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    max-width: 800px;
+  }
+
   .team-card {
     position: relative;
     display: flex;
@@ -387,7 +417,7 @@
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 20px;
     padding: 24px 36px;
-    min-width: 340px;
+    min-width: 320px;
     box-shadow: 0 4px 20px rgba(0,0,0,0.4);
     transform-style: preserve-3d;
     transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1), border-color 0.25s ease;
@@ -488,23 +518,42 @@
     </a>
 
     <div class="team-label reveal">The Team</div>
-    <div class="team-card tilt-card reveal">
-      <div class="shine-overlay"></div>
-      <div class="mouse-glow"></div>
-      <div class="avatar-wrapper">
-        <img id="ownerAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 24 24' fill='%235865F2'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" alt="Owner avatar">
-        <span id="statusIndicator" class="status-dot offline" title="Offline"></span>
+    <div class="team-grid">
+      <!-- Owner Card -->
+      <div class="team-card tilt-card reveal">
+        <div class="shine-overlay"></div>
+        <div class="mouse-glow"></div>
+        <div class="avatar-wrapper">
+          <img id="ownerAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 24 24' fill='%235865F2'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" alt="Owner avatar">
+          <span id="ownerStatusIndicator" class="status-dot offline" title="Offline"></span>
+        </div>
+        <div class="details">
+          <div class="name" id="ownerName">Owner</div>
+          <div class="role">Owner & Lead Developer</div>
+          <div class="custom-status" id="ownerCustomStatus">Loading status...</div>
+        </div>
       </div>
-      <div class="details">
-        <div class="name" id="ownerName">Owner</div>
-        <div class="role">Owner & Lead Developer</div>
-        <div class="custom-status" id="customStatus">Loading status...</div>
+
+      <!-- Administrator Card -->
+      <div class="team-card tilt-card reveal">
+        <div class="shine-overlay"></div>
+        <div class="mouse-glow"></div>
+        <div class="avatar-wrapper">
+          <img id="adminAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 24 24' fill='%235865F2'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" alt="Admin avatar">
+          <span id="adminStatusIndicator" class="status-dot offline" title="Offline"></span>
+        </div>
+        <div class="details">
+          <div class="name" id="adminName">Administrator</div>
+          <div class="role">Administrator</div>
+          <div class="custom-status" id="adminCustomStatus">Loading status...</div>
+        </div>
       </div>
     </div>
   </section>
 
   <script>
-    const DISCORD_ID = "992125170284253195";
+    const OWNER_DISCORD_ID = "992125170284253195";
+    const ADMIN_DISCORD_ID = "517884694424059915";
 
     // Animated Counter Function
     let hasAnimatedStats = false;
@@ -596,6 +645,7 @@
         const grid = document.getElementById("gamesGrid");
         grid.innerHTML = "";
 
+        // Standard fetched games
         data.games.forEach((g, index) => {
           const card = document.createElement("a");
           card.className = "game-card tilt-card reveal";
@@ -609,7 +659,6 @@
             <div class="mouse-glow"></div>
             <img class="bg-img" src="${g.icon || ''}" alt="${g.name}" onerror="this.style.opacity='0.2'">
             <div class="gradient-overlay"></div>
-            <div class="top-badge">Roblox Game</div>
             <div class="info">
               <div class="name">${g.name}</div>
               <div class="row">
@@ -627,19 +676,47 @@
           grid.appendChild(card);
         });
 
+        // Add Mystery "???" Card
+        const mysteryCard = document.createElement("div");
+        mysteryCard.className = "game-card mystery-card tilt-card reveal";
+        mysteryCard.innerHTML = `
+          <div class="shine-overlay"></div>
+          <div class="mouse-glow"></div>
+          <div class="coming-soon-badge">Coming Soon</div>
+          <div class="mystery-bg">?</div>
+          <div class="info">
+            <div class="name">???</div>
+          </div>
+        `;
+        grid.appendChild(mysteryCard);
+
         init3DTilt();
         initRevealAnimations();
       })
       .catch(err => {
         document.getElementById("groupName").textContent = "Conrado Creations";
         document.getElementById("brandName").textContent = "Conrado Creations";
-        document.getElementById("gamesGrid").innerHTML = `<div style="color:#f87171;font-size:14px;">Failed to load games: ${err.message}</div>`;
+        
+        const grid = document.getElementById("gamesGrid");
+        grid.innerHTML = `
+          <div class="game-card mystery-card tilt-card reveal">
+            <div class="shine-overlay"></div>
+            <div class="mouse-glow"></div>
+            <div class="coming-soon-badge">Coming Soon</div>
+            <div class="mystery-bg">?</div>
+            <div class="info">
+              <div class="name">???</div>
+            </div>
+          </div>
+        `;
+        init3DTilt();
+        initRevealAnimations();
       });
 
-    // Fetch Discord Presence via Lanyard API
-    async function fetchDiscordPresence() {
+    // Helper to fetch user presence via Lanyard API
+    async function loadDiscordUser(id, avatarElId, nameElId, statusDotId, statusTextId) {
       try {
-        const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
+        const res = await fetch(`https://api.lanyard.rest/v1/users/${id}`);
         const data = await res.json();
 
         if (data.success && data.data) {
@@ -651,14 +728,14 @@
             ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${avatarExtension}?size=256`
             : `https://cdn.discordapp.com/embed/avatars/${(BigInt(user.id) >> 22n) % 6n}.png`;
           
-          document.getElementById("ownerAvatar").src = avatarUrl;
-          document.getElementById("ownerName").textContent = user.global_name || user.username;
+          document.getElementById(avatarElId).src = avatarUrl;
+          document.getElementById(nameElId).textContent = user.global_name || user.username;
 
-          const dot = document.getElementById("statusIndicator");
+          const dot = document.getElementById(statusDotId);
           dot.className = `status-dot ${status}`;
           dot.title = status.toUpperCase();
 
-          const customStat = document.getElementById("customStatus");
+          const customStat = document.getElementById(statusTextId);
           if (data.data.activities && data.data.activities.length > 0) {
             const act = data.data.activities.find(a => a.type === 0) || data.data.activities[0];
             customStat.textContent = act.state ? `"${act.state}"` : act.name;
@@ -667,11 +744,17 @@
           }
         }
       } catch (err) {
-        console.error("Lanyard error:", err);
+        console.error("Lanyard error for ID " + id + ":", err);
       }
     }
-    fetchDiscordPresence();
-    setInterval(fetchDiscordPresence, 30000);
+
+    function updateTeamPresence() {
+      loadDiscordUser(OWNER_DISCORD_ID, "ownerAvatar", "ownerName", "ownerStatusIndicator", "ownerCustomStatus");
+      loadDiscordUser(ADMIN_DISCORD_ID, "adminAvatar", "adminName", "adminStatusIndicator", "adminCustomStatus");
+    }
+
+    updateTeamPresence();
+    setInterval(updateTeamPresence, 30000);
 
     // 3D Perspective Tilt (Subtle 8deg reactivity)
     function init3DTilt() {
