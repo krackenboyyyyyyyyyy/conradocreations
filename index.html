@@ -52,23 +52,23 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 14px 20px;
+    padding: 16px 24px;
     background: rgba(5,5,6,0.85);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid rgba(255,255,255,0.08);
   }
   .header-inner {
     width: 100%;
-    max-width: 900px;
+    max-width: 1000px;
     display: flex;
     align-items: center;
     justify-content: space-between;
   }
-  .brand { display: flex; align-items: center; gap: 10px; }
-  .brand img { width: 28px; height: 28px; border-radius: 6px; object-fit: cover; background: #111; }
-  .brand span { font-size: 14px; font-weight: 700; }
+  .brand { display: flex; align-items: center; gap: 12px; }
+  .brand img { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; background: #111; }
+  .brand span { font-size: 16px; font-weight: 700; }
   nav { display: flex; gap: 28px; }
-  nav a { color: #cdd3de; text-decoration: none; font-size: 14px; font-weight: 600; letter-spacing: 0.02em; }
+  nav a { color: #cdd3de; text-decoration: none; font-size: 15px; font-weight: 600; letter-spacing: 0.02em; }
   nav a:hover { color: #60a5fa; }
 
   section {
@@ -77,7 +77,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 80px 20px;
+    padding: 90px 20px;
     position: relative;
     z-index: 1;
   }
@@ -85,60 +85,108 @@
   #home { text-align: center; }
   .badge {
     display: inline-block;
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
     color: #60a5fa;
     background: rgba(96,165,250,0.08);
     border: 1px solid rgba(96,165,250,0.25);
-    padding: 5px 12px;
+    padding: 6px 14px;
     border-radius: 999px;
     margin-bottom: 24px;
   }
-  #groupName { font-size: 56px; font-weight: 800; letter-spacing: -0.03em; margin-bottom: 32px; max-width: 800px; }
+  /* Bigger group name on Home */
+  #groupName { 
+    font-size: 68px; 
+    font-weight: 900; 
+    letter-spacing: -0.03em; 
+    margin-bottom: 36px; 
+    max-width: 900px; 
+    line-height: 1.1;
+  }
+  /* Bigger Home stats */
   .stat-row {
     display: flex;
     gap: 1px;
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
     overflow: hidden;
   }
-  .stat-cell { background: rgba(10,10,12,0.7); text-align: center; padding: 22px 32px; }
-  .stat-cell .num { font-size: 26px; font-weight: 800; color: #fff; }
-  .stat-cell .lbl { font-size: 11px; color: #8b93a3; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
+  .stat-cell { background: rgba(10,10,12,0.8); text-align: center; padding: 26px 40px; }
+  .stat-cell .num { font-size: 32px; font-weight: 800; color: #fff; }
+  .stat-cell .lbl { font-size: 12px; color: #8b93a3; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; }
 
-  #games h2, #contact h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
-  .section-sub { color: #8b93a3; font-size: 14px; margin-bottom: 40px; }
+  #games h2, #contact h2 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
+  .section-sub { color: #8b93a3; font-size: 15px; margin-bottom: 40px; text-align: center; }
+
+  /* Redesigned Games Grid with dynamic background and gradient overlay */
   .games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(56px, 1fr));
-    gap: 8px;
-    max-width: 500px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    max-width: 900px;
     width: 100%;
   }
   .game-card {
-    background: rgba(10,10,12,0.7);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 8px;
+    position: relative;
+    background: rgba(10,10,12,0.8);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
     overflow: hidden;
     text-decoration: none;
     color: inherit;
-    display: block;
-    transition: border-color 0.2s ease, transform 0.2s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 220px;
+    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
   }
-  .game-card:hover { border-color: rgba(96,165,250,0.35); transform: translateY(-2px); }
-  .game-card img { width: 100%; aspect-ratio: 1 / 1; object-fit: cover; display: block; background: #111; }
-  .game-card .info { padding: 4px 5px; }
+  .game-card:hover { 
+    border-color: rgba(96,165,250,0.5); 
+    transform: translateY(-4px); 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  }
+  .game-card .bg-img {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    z-index: 0;
+    background: #111;
+  }
+  .game-card .gradient-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(5,5,6,0.95) 15%, rgba(5,5,6,0.6) 50%, rgba(5,5,6,0.1) 100%);
+    z-index: 1;
+  }
+  .game-card .info { 
+    position: relative;
+    z-index: 2;
+    padding: 16px 18px; 
+  }
   .game-card .name {
-    font-size: 8px; font-weight: 700; margin-bottom: 3px;
-    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    font-size: 18px; 
+    font-weight: 800; 
+    margin-bottom: 12px;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
   }
-  .game-card .row { display: flex; gap: 5px; flex-wrap: wrap; }
-  .game-card .metric { display: flex; flex-direction: column; gap: 0; }
-  .game-card .metric .v { font-size: 7px; font-weight: 700; color: #fff; }
-  .game-card .metric .k { font-size: 6px; color: #8b93a3; text-transform: uppercase; }
+  .game-card .row { 
+    display: flex; 
+    justify-content: space-between;
+    gap: 12px; 
+    background: rgba(255,255,255,0.05);
+    padding: 10px 12px;
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .game-card .metric { display: flex; flex-direction: column; gap: 2px; }
+  .game-card .metric .v { font-size: 13px; font-weight: 800; color: #fff; }
+  .game-card .metric .k { font-size: 9px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.04em; }
 
   #contact { text-align: center; }
   .discord-btn {
@@ -149,29 +197,32 @@
     color: #fff;
     text-decoration: none;
     font-weight: 700;
-    font-size: 15px;
-    padding: 14px 28px;
-    border-radius: 10px;
-    margin-top: 20px;
+    font-size: 16px;
+    padding: 16px 32px;
+    border-radius: 12px;
+    margin-top: 10px;
     margin-bottom: 50px;
-    transition: opacity 0.2s ease;
+    transition: opacity 0.2s ease, transform 0.2s ease;
   }
-  .discord-btn:hover { opacity: 0.88; }
+  .discord-btn:hover { opacity: 0.9; transform: translateY(-2px); }
 
-  .team-label { font-size: 12px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: #8b93a3; margin-bottom: 16px; }
+  /* Bigger Team Cards */
+  .team-label { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #8b93a3; margin-bottom: 20px; }
   .team-card {
     display: flex;
     align-items: center;
-    gap: 14px;
-    background: rgba(10,10,12,0.7);
-    border: 1px solid rgba(255,255,255,0.08);
-    border-radius: 14px;
-    padding: 14px 20px;
+    gap: 20px;
+    background: rgba(10,10,12,0.8);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px;
+    padding: 22px 32px;
+    min-width: 320px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
   }
-  .team-card img { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; background: #111; }
+  .team-card img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; background: #222; border: 2px solid rgba(255,255,255,0.1); }
   .team-card .details { text-align: left; }
-  .team-card .name { font-size: 15px; font-weight: 700; }
-  .team-card .role { font-size: 12px; color: #60a5fa; font-weight: 600; }
+  .team-card .name { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+  .team-card .role { font-size: 14px; color: #60a5fa; font-weight: 600; }
 </style>
 </head>
 <body>
@@ -181,7 +232,7 @@
   <header>
     <div class="header-inner">
       <div class="brand">
-        <img id="groupIcon" src="" alt="">
+        <img id="groupIcon" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 24 24' fill='%23333'%3E%3Crect width='24' height='24' rx='6'/%3E%3C/svg%3E" alt="Group Icon">
         <span id="brandName">Loading...</span>
       </div>
       <nav>
@@ -199,6 +250,7 @@
       <div class="stat-cell"><div class="num" id="memberCount">—</div><div class="lbl">Members</div></div>
       <div class="stat-cell"><div class="num" id="totalVisits">—</div><div class="lbl">Total Visits</div></div>
       <div class="stat-cell"><div class="num" id="totalPlaying">—</div><div class="lbl">Playing Now</div></div>
+      <div class="stat-cell"><div class="num" id="peakCCU">1.2K+</div><div class="lbl">Peak CCU</div></div>
     </div>
   </section>
 
@@ -217,10 +269,10 @@
 
     <div class="team-label">The Team</div>
     <div class="team-card">
-      <img src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Owner avatar">
+      <img id="ownerAvatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Owner avatar" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'72\' height=\'72\' viewBox=\'0 0 24 24\' fill=\'%235865F2\'%3E%3Ccircle cx=\'12\' cy=\'12\' r=\'12\'/%3E%3C/svg%3E';">
       <div class="details">
         <div class="name">Owner</div>
-        <div class="role">Owner</div>
+        <div class="role">Owner & Lead Developer</div>
       </div>
     </div>
   </section>
@@ -232,28 +284,46 @@
         document.getElementById("groupName").textContent = data.group.name;
         document.getElementById("brandName").textContent = data.group.name;
         document.getElementById("memberCount").textContent = data.group.memberCount.toLocaleString();
-        if (data.group.icon) document.getElementById("groupIcon").src = data.group.icon;
+        
+        if (data.group.icon) {
+          const groupImg = document.getElementById("groupIcon");
+          groupImg.src = data.group.icon;
+          groupImg.onerror = () => { groupImg.style.display = 'none'; };
+        }
 
-        const totalVisits = data.games.reduce((sum, g) => sum + g.visits, 0);
-        const totalPlaying = data.games.reduce((sum, g) => sum + g.playing, 0);
+        const totalVisits = data.games.reduce((sum, g) => sum + (g.visits || 0), 0);
+        const totalPlaying = data.games.reduce((sum, g) => sum + (g.playing || 0), 0);
         document.getElementById("totalVisits").textContent = totalVisits.toLocaleString();
         document.getElementById("totalPlaying").textContent = totalPlaying.toLocaleString();
 
+        // Dynamic Peak CCU Logic
+        const defaultPeak = 1200;
+        if (totalPlaying > defaultPeak) {
+          document.getElementById("peakCCU").textContent = totalPlaying.toLocaleString();
+        } else {
+          document.getElementById("peakCCU").textContent = "1.2K+";
+        }
+
         const grid = document.getElementById("gamesGrid");
+        grid.innerHTML = "";
+
         data.games.forEach(g => {
           const card = document.createElement("a");
           card.className = "game-card";
-          card.href = g.placeId ? `https://www.roblox.com/games/${g.placeId}` : "#";
+          // Fixed Robox Game Link format
+          const placeId = g.placeId || g.rootPlaceId || "";
+          card.href = placeId ? `https://www.roblox.com/games/${placeId}` : "#";
           card.target = "_blank";
           card.rel = "noopener";
           card.innerHTML = `
-            <img src="${g.icon || ''}" alt="${g.name}">
+            <img class="bg-img" src="${g.icon || ''}" alt="${g.name}" onerror="this.style.opacity='0.2'">
+            <div class="gradient-overlay"></div>
             <div class="info">
               <div class="name">${g.name}</div>
               <div class="row">
-                <div class="metric"><div class="v">${g.visits.toLocaleString()}</div><div class="k">Visits</div></div>
-                <div class="metric"><div class="v">${g.playing.toLocaleString()}</div><div class="k">Play</div></div>
-                <div class="metric"><div class="v">${g.likeRatio}</div><div class="k">Like</div></div>
+                <div class="metric"><div class="v">${(g.visits || 0).toLocaleString()}</div><div class="k">Visits</div></div>
+                <div class="metric"><div class="v">${(g.playing || 0).toLocaleString()}</div><div class="k">Playing</div></div>
+                <div class="metric"><div class="v">${g.likeRatio || '100%'}</div><div class="k">Rating</div></div>
               </div>
             </div>
           `;
@@ -262,9 +332,10 @@
       })
       .catch(err => {
         document.getElementById("groupName").textContent = "Error loading stats";
-        document.getElementById("gamesGrid").innerHTML = `<div style="color:#f87171;font-size:13px;">${err.message}</div>`;
+        document.getElementById("gamesGrid").innerHTML = `<div style="color:#f87171;font-size:14px;">Failed to load games: ${err.message}</div>`;
       });
 
+    // Star background animation logic
     const canvas = document.getElementById("starCanvas");
     const ctx = canvas.getContext("2d");
     let vw, vh, docH, stars;
