@@ -42,6 +42,7 @@ async function getGroupInfo(groupId) {
   if (!r.ok) throw new Error("Group not found.");
   const g = await r.json();
   return {
+    name: g.name,
     memberCount: g.memberCount,
   };
 }
@@ -63,9 +64,29 @@ async function getAllPublicGameIds(groupId) {
   return ids;
 }
 
+async function getIconsForUniverseIds(universeIds) {
+  const chunks = chunkArray(universeIds, 100);
+  let iconsById = {};
+
+  for (const chunk of chunks) {
+    const idsParam = chunk.join(",");
+    const r = await fetch(
+      `https://thumbnails.roblox.com/v1/games/icons?universeIds=${idsParam}&size=512x512&format=Png&isCircular=false`
+    );
+    if (!r.ok) continue;
+    const data = (await r.json()).data || [];
+    data.forEach((item) => {
+      iconsById[item.targetId] = item.imageUrl;
+    });
+  }
+
+  return iconsById;
+}
+
 async function getStatsForUniverseIds(universeIds) {
   const chunks = chunkArray(universeIds, 100);
   let results = [];
+  const iconsById = await getIconsForUniverseIds(universeIds);
 
   for (const chunk of chunks) {
     const idsParam = chunk.join(",");
@@ -86,6 +107,7 @@ async function getStatsForUniverseIds(universeIds) {
 
       results.push({
         name: game.name,
+        icon: iconsById[game.id] || null,
         visits: game.visits,
         playing: game.playing,
         likeRatio,
