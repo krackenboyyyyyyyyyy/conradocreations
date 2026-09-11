@@ -122,14 +122,14 @@
   #home { text-align: center; }
   .badge {
     display: inline-block;
-    font-size: 12px;
+    font-size: 14px;
     font-weight: 700;
-    letter-spacing: 0.06em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
     color: #60a5fa;
     background: rgba(96,165,250,0.08);
     border: 1px solid rgba(96,165,250,0.25);
-    padding: 6px 14px;
+    padding: 8px 18px;
     border-radius: 999px;
     margin-bottom: 24px;
     animation: floatBadge 4s ease-in-out infinite;
@@ -139,48 +139,57 @@
     50% { transform: translateY(-6px); }
   }
 
+  /* Bigger Title with Shining Blue / Pink / Purple Animated Gradient */
   #groupName { 
-    font-size: 68px; 
+    font-size: 86px; 
     font-weight: 900; 
-    letter-spacing: -0.03em; 
-    margin-bottom: 36px; 
-    max-width: 900px; 
-    line-height: 1.1;
-    background: linear-gradient(135deg, #ffffff 40%, #93c5fd 100%);
+    letter-spacing: -0.04em; 
+    margin-bottom: 42px; 
+    max-width: 1000px; 
+    line-height: 1.05;
+    background: linear-gradient(120deg, #38bdf8 0%, #ec4899 45%, #a855f7 75%, #38bdf8 100%);
+    background-size: 200% auto;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
+    animation: gradientShine 5s linear infinite;
+    text-shadow: 0 0 40px rgba(236,72,153,0.15);
+  }
+  @keyframes gradientShine {
+    0% { background-position: 0% center; }
+    100% { background-position: 200% center; }
   }
 
+  /* Bigger Stats Row */
   .stat-row {
     display: flex;
     gap: 1px;
     background: rgba(255,255,255,0.12);
     border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 16px;
+    border-radius: 20px;
     overflow: hidden;
     transform-style: preserve-3d;
   }
   .stat-cell { 
     position: relative;
-    background: rgba(10,10,12,0.8); 
+    background: rgba(10,10,12,0.85); 
     text-align: center; 
-    padding: 26px 40px; 
+    padding: 34px 54px; 
     transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1);
     transform-style: preserve-3d;
     overflow: hidden;
   }
-  .stat-cell .num { font-size: 32px; font-weight: 800; color: #fff; transform: translateZ(15px); }
-  .stat-cell .lbl { font-size: 12px; color: #8b93a3; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; transform: translateZ(10px); }
+  .stat-cell .num { font-size: 42px; font-weight: 900; color: #fff; transform: translateZ(10px); }
+  .stat-cell .lbl { font-size: 13px; color: #94a3b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 8px; transform: translateZ(6px); }
 
   #games h2, #contact h2 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
   .section-sub { color: #8b93a3; font-size: 15px; margin-bottom: 40px; text-align: center; }
 
-  /* Games Grid */
+  /* Smaller Game Cards Grid */
   .games-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 24px;
-    max-width: 900px;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Way smaller card size */
+    gap: 20px;
+    max-width: 860px;
     width: 100%;
     perspective: 1000px;
   }
@@ -189,7 +198,7 @@
     aspect-ratio: 1 / 1;
     background: rgba(10,10,12,0.8);
     border: 1px solid rgba(255,255,255,0.12);
-    border-radius: 18px;
+    border-radius: 14px;
     overflow: hidden;
     text-decoration: none;
     color: inherit;
@@ -202,7 +211,7 @@
   }
   .game-card:hover { 
     border-color: rgba(96,165,250,0.6); 
-    box-shadow: 0 20px 40px rgba(0,0,0,0.7), 0 0 25px rgba(96,165,250,0.25);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.7), 0 0 15px rgba(96,165,250,0.2);
   }
 
   .mouse-glow {
@@ -212,7 +221,7 @@
     z-index: 2;
     opacity: 0;
     transition: opacity 0.3s ease;
-    background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.18), transparent 80%);
+    background: radial-gradient(280px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.15), transparent 80%);
   }
   .game-card:hover .mouse-glow,
   .tilt-card:hover .mouse-glow {
@@ -229,7 +238,7 @@
       115deg,
       transparent 20%,
       rgba(255, 255, 255, 0.05) 40%,
-      rgba(255, 255, 255, 0.35) 50%,
+      rgba(255, 255, 255, 0.3) 50%,
       rgba(255, 255, 255, 0.05) 60%,
       transparent 80%
     );
@@ -258,40 +267,43 @@
     background: #111;
     transition: transform 0.5s ease;
   }
-  .game-card:hover .bg-img { transform: scale(1.08); }
+  .game-card:hover .bg-img { transform: scale(1.06); }
 
   .game-card .gradient-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(5,5,6,0.95) 20%, rgba(5,5,6,0.5) 60%, rgba(5,5,6,0.1) 100%);
+    background: linear-gradient(to top, rgba(5,5,6,0.95) 20%, rgba(5,5,6,0.5) 65%, rgba(5,5,6,0.1) 100%);
     z-index: 1;
   }
   .game-card .info { 
     position: relative;
     z-index: 4;
-    padding: 18px; 
-    transform: translateZ(30px);
+    padding: 12px; 
+    transform: translateZ(12px); /* Toned down 3D pop */
   }
   .game-card .name {
-    font-size: 18px; 
+    font-size: 14px; 
     font-weight: 800; 
-    margin-bottom: 12px;
+    margin-bottom: 8px;
     color: #ffffff;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.8);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .game-card .row { 
     display: flex; 
     justify-content: space-between;
-    gap: 8px; 
-    background: rgba(15,15,20,0.75);
-    padding: 10px 12px;
-    border-radius: 10px;
+    gap: 4px; 
+    background: rgba(15,15,20,0.8);
+    padding: 6px 8px;
+    border-radius: 8px;
     backdrop-filter: blur(8px);
     border: 1px solid rgba(255,255,255,0.08);
   }
-  .game-card .metric { display: flex; flex-direction: column; gap: 2px; }
-  .game-card .metric .v { font-size: 13px; font-weight: 800; color: #fff; }
-  .game-card .metric .k { font-size: 9px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.04em; }
+  .game-card .metric { display: flex; flex-direction: column; gap: 1px; }
+  .game-card .metric .v { font-size: 11px; font-weight: 800; color: #fff; }
+  .game-card .metric .k { font-size: 8px; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.03em; }
 
   #contact { text-align: center; }
   .discord-btn {
@@ -338,7 +350,7 @@
     position: relative;
     width: 76px;
     height: 76px;
-    transform: translateZ(25px);
+    transform: translateZ(12px);
   }
   .avatar-wrapper img {
     width: 100%;
@@ -362,7 +374,7 @@
   .status-dot.dnd { background-color: #f23f43; }
   .status-dot.offline { background-color: #80848e; }
   
-  .team-card .details { text-align: left; transform: translateZ(20px); }
+  .team-card .details { text-align: left; transform: translateZ(10px); }
   .team-card .name { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
   .team-card .role { font-size: 14px; color: #60a5fa; font-weight: 600; }
   .custom-status { font-size: 12px; color: #94a3b8; margin-top: 4px; font-style: italic; }
@@ -388,7 +400,7 @@
 
   <section id="home">
     <div class="badge reveal">Roblox Game Studio</div>
-    <div id="groupName" class="reveal">Loading...</div>
+    <div id="groupName" class="reveal">Conrado Creations</div>
     <div class="stat-row reveal" id="statRow">
       <div class="stat-cell tilt-card">
         <div class="mouse-glow"></div>
@@ -467,8 +479,8 @@
     fetch("/api/stats?type=groupGames&groupId=936632772")
       .then(r => r.json())
       .then(data => {
-        document.getElementById("groupName").textContent = data.group.name;
-        document.getElementById("brandName").textContent = data.group.name;
+        document.getElementById("groupName").textContent = data.group.name || "Conrado Creations";
+        document.getElementById("brandName").textContent = data.group.name || "Conrado Creations";
         document.getElementById("memberCount").textContent = data.group.memberCount.toLocaleString();
         
         if (data.group.icon) {
@@ -495,7 +507,7 @@
         data.games.forEach((g, index) => {
           const card = document.createElement("a");
           card.className = "game-card tilt-card reveal";
-          card.style.transitionDelay = `${(index % 3) * 0.12}s`; // Stagger delay
+          card.style.transitionDelay = `${(index % 4) * 0.08}s`;
           const placeId = g.placeId || g.rootPlaceId || "";
           card.href = placeId ? `https://www.roblox.com/games/${placeId}` : "#";
           card.target = "_blank";
@@ -521,7 +533,8 @@
         initRevealAnimations();
       })
       .catch(err => {
-        document.getElementById("groupName").textContent = "Error loading stats";
+        document.getElementById("groupName").textContent = "Conrado Creations";
+        document.getElementById("brandName").textContent = "Conrado Creations";
         document.getElementById("gamesGrid").innerHTML = `<div style="color:#f87171;font-size:14px;">Failed to load games: ${err.message}</div>`;
       });
 
@@ -562,7 +575,7 @@
     fetchDiscordPresence();
     setInterval(fetchDiscordPresence, 30000);
 
-    // 3D Perspective Tilt & Interactive Light Glow Tracking
+    // 3D Perspective Tilt (Reduced by 2x for subtler reactivity)
     function init3DTilt() {
       const cards = document.querySelectorAll('.tilt-card');
       
@@ -575,10 +588,12 @@
           const centerX = rect.width / 2;
           const centerY = rect.height / 2;
           
-          const rotateX = ((y - centerY) / centerY) * -16;
-          const rotateY = ((x - centerX) / centerX) * 16;
+          // Max rotation reduced from 16deg to 8deg
+          const rotateX = ((y - centerY) / centerY) * -8;
+          const rotateY = ((x - centerX) / centerX) * 8;
           
-          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(12px)`;
+          // translateZ reduced from 12px to 6px
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(6px)`;
           card.style.setProperty('--mouse-x', `${x}px`);
           card.style.setProperty('--mouse-y', `${y}px`);
         });
