@@ -32,7 +32,7 @@
     left: 50%;
     width: 500px;
     height: 500px;
-    background: radial-gradient(circle, rgba(236,72,153,0.10) 0%, rgba(59,130,246,0.07) 45%, transparent 70%);
+    background: radial-gradient(circle, rgba(236,72,153,0.12) 0%, rgba(59,130,246,0.08) 45%, transparent 70%);
     filter: blur(60px);
     transform: translateX(-50%);
     animation: shine 9s ease-in-out infinite;
@@ -43,6 +43,18 @@
     0%   { transform: translate(-70%, 0); opacity: 0.6; }
     50%  { transform: translate(-30%, 40px); opacity: 1; }
     100% { transform: translate(-70%, 0); opacity: 0.6; }
+  }
+
+  /* Scroll Reveal CSS */
+  .reveal {
+    opacity: 0;
+    transform: translateY(35px) scale(0.98);
+    transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: opacity, transform;
+  }
+  .reveal.active {
+    opacity: 1;
+    transform: translateY(0) scale(1);
   }
 
   header {
@@ -65,11 +77,35 @@
     justify-content: space-between;
   }
   .brand { display: flex; align-items: center; gap: 12px; }
-  .brand img { width: 32px; height: 32px; border-radius: 8px; object-fit: cover; background: #111; }
+  .brand img { 
+    width: 32px; height: 32px; border-radius: 8px; object-fit: cover; background: #111; 
+    transition: transform 0.3s ease;
+  }
+  .brand:hover img { transform: rotate(8deg) scale(1.1); }
   .brand span { font-size: 16px; font-weight: 700; }
   nav { display: flex; gap: 28px; }
-  nav a { color: #cdd3de; text-decoration: none; font-size: 15px; font-weight: 600; letter-spacing: 0.02em; }
+  nav a { 
+    color: #cdd3de; 
+    text-decoration: none; 
+    font-size: 15px; 
+    font-weight: 600; 
+    letter-spacing: 0.02em; 
+    position: relative;
+    transition: color 0.25s ease;
+  }
+  nav a::after {
+    content: "";
+    position: absolute;
+    bottom: -4px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background: #60a5fa;
+    border-radius: 2px;
+    transition: width 0.25s ease;
+  }
   nav a:hover { color: #60a5fa; }
+  nav a:hover::after { width: 100%; }
 
   section {
     min-height: 100vh;
@@ -80,6 +116,7 @@
     padding: 90px 20px;
     position: relative;
     z-index: 1;
+    perspective: 1000px;
   }
 
   #home { text-align: center; }
@@ -95,8 +132,13 @@
     padding: 6px 14px;
     border-radius: 999px;
     margin-bottom: 24px;
+    animation: floatBadge 4s ease-in-out infinite;
   }
-  /* Bigger group name on Home */
+  @keyframes floatBadge {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+  }
+
   #groupName { 
     font-size: 68px; 
     font-weight: 900; 
@@ -104,8 +146,11 @@
     margin-bottom: 36px; 
     max-width: 900px; 
     line-height: 1.1;
+    background: linear-gradient(135deg, #ffffff 40%, #93c5fd 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
-  /* Bigger Home stats */
+
   .stat-row {
     display: flex;
     gap: 1px;
@@ -113,41 +158,97 @@
     border: 1px solid rgba(255,255,255,0.12);
     border-radius: 16px;
     overflow: hidden;
+    transform-style: preserve-3d;
   }
-  .stat-cell { background: rgba(10,10,12,0.8); text-align: center; padding: 26px 40px; }
-  .stat-cell .num { font-size: 32px; font-weight: 800; color: #fff; }
-  .stat-cell .lbl { font-size: 12px; color: #8b93a3; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; }
+  .stat-cell { 
+    position: relative;
+    background: rgba(10,10,12,0.8); 
+    text-align: center; 
+    padding: 26px 40px; 
+    transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1);
+    transform-style: preserve-3d;
+    overflow: hidden;
+  }
+  .stat-cell .num { font-size: 32px; font-weight: 800; color: #fff; transform: translateZ(15px); }
+  .stat-cell .lbl { font-size: 12px; color: #8b93a3; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 6px; transform: translateZ(10px); }
 
   #games h2, #contact h2 { font-size: 32px; font-weight: 800; margin-bottom: 8px; }
   .section-sub { color: #8b93a3; font-size: 15px; margin-bottom: 40px; text-align: center; }
 
-  /* Redesigned Games Grid with dynamic background and gradient overlay */
+  /* Games Grid */
   .games-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 20px;
+    gap: 24px;
     max-width: 900px;
     width: 100%;
+    perspective: 1000px;
   }
   .game-card {
     position: relative;
+    aspect-ratio: 1 / 1;
     background: rgba(10,10,12,0.8);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 18px;
     overflow: hidden;
     text-decoration: none;
     color: inherit;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    min-height: 220px;
-    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    transform-style: preserve-3d;
+    transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1), border-color 0.25s ease, box-shadow 0.25s ease;
+    will-change: transform;
   }
   .game-card:hover { 
-    border-color: rgba(96,165,250,0.5); 
-    transform: translateY(-4px); 
-    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    border-color: rgba(96,165,250,0.6); 
+    box-shadow: 0 20px 40px rgba(0,0,0,0.7), 0 0 25px rgba(96,165,250,0.25);
   }
+
+  .mouse-glow {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: radial-gradient(400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255,255,255,0.18), transparent 80%);
+  }
+  .game-card:hover .mouse-glow,
+  .tilt-card:hover .mouse-glow {
+    opacity: 1;
+  }
+
+  .shine-overlay {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      115deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.05) 40%,
+      rgba(255, 255, 255, 0.35) 50%,
+      rgba(255, 255, 255, 0.05) 60%,
+      transparent 80%
+    );
+    transform: rotate(30deg) translateY(-100%);
+    pointer-events: none;
+    z-index: 3;
+    opacity: 0;
+  }
+
+  .game-card:hover .shine-overlay,
+  .tilt-card:hover .shine-overlay {
+    animation: shineSweep 0.85s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+
+  @keyframes shineSweep {
+    0% { transform: rotate(30deg) translateY(-100%); opacity: 1; }
+    100% { transform: rotate(30deg) translateY(100%); opacity: 0; }
+  }
+
   .game-card .bg-img {
     position: absolute;
     top: 0; left: 0;
@@ -155,34 +256,38 @@
     object-fit: cover;
     z-index: 0;
     background: #111;
+    transition: transform 0.5s ease;
   }
+  .game-card:hover .bg-img { transform: scale(1.08); }
+
   .game-card .gradient-overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(5,5,6,0.95) 15%, rgba(5,5,6,0.6) 50%, rgba(5,5,6,0.1) 100%);
+    background: linear-gradient(to top, rgba(5,5,6,0.95) 20%, rgba(5,5,6,0.5) 60%, rgba(5,5,6,0.1) 100%);
     z-index: 1;
   }
   .game-card .info { 
     position: relative;
-    z-index: 2;
-    padding: 16px 18px; 
+    z-index: 4;
+    padding: 18px; 
+    transform: translateZ(30px);
   }
   .game-card .name {
     font-size: 18px; 
     font-weight: 800; 
     margin-bottom: 12px;
     color: #ffffff;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+    text-shadow: 0 2px 6px rgba(0,0,0,0.8);
   }
   .game-card .row { 
     display: flex; 
     justify-content: space-between;
-    gap: 12px; 
-    background: rgba(255,255,255,0.05);
+    gap: 8px; 
+    background: rgba(15,15,20,0.75);
     padding: 10px 12px;
-    border-radius: 8px;
-    backdrop-filter: blur(4px);
-    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255,255,255,0.08);
   }
   .game-card .metric { display: flex; flex-direction: column; gap: 2px; }
   .game-card .metric .v { font-size: 13px; font-weight: 800; color: #fff; }
@@ -202,27 +307,65 @@
     border-radius: 12px;
     margin-top: 10px;
     margin-bottom: 50px;
-    transition: opacity 0.2s ease, transform 0.2s ease;
+    transition: opacity 0.2s ease, transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 4px 15px rgba(88,101,242,0.3);
   }
-  .discord-btn:hover { opacity: 0.9; transform: translateY(-2px); }
+  .discord-btn:hover { 
+    opacity: 0.95; 
+    transform: translateY(-3px) scale(1.02); 
+    box-shadow: 0 8px 25px rgba(88,101,242,0.5);
+  }
 
-  /* Bigger Team Cards */
   .team-label { font-size: 13px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #8b93a3; margin-bottom: 20px; }
   .team-card {
+    position: relative;
     display: flex;
     align-items: center;
     gap: 20px;
     background: rgba(10,10,12,0.8);
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 18px;
-    padding: 22px 32px;
-    min-width: 320px;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    border-radius: 20px;
+    padding: 24px 36px;
+    min-width: 340px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+    transform-style: preserve-3d;
+    transition: transform 0.15s cubic-bezier(0.2, 0, 0.2, 1), border-color 0.25s ease;
+    overflow: hidden;
   }
-  .team-card img { width: 72px; height: 72px; border-radius: 50%; object-fit: cover; background: #222; border: 2px solid rgba(255,255,255,0.1); }
-  .team-card .details { text-align: left; }
+  .team-card:hover { border-color: rgba(96,165,250,0.5); }
+  
+  .avatar-wrapper {
+    position: relative;
+    width: 76px;
+    height: 76px;
+    transform: translateZ(25px);
+  }
+  .avatar-wrapper img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #222;
+    border: 2px solid rgba(255,255,255,0.15);
+  }
+  .status-dot {
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3.5px solid #0a0a0c;
+  }
+  .status-dot.online { background-color: #23a55a; }
+  .status-dot.idle { background-color: #f0b232; }
+  .status-dot.dnd { background-color: #f23f43; }
+  .status-dot.offline { background-color: #80848e; }
+  
+  .team-card .details { text-align: left; transform: translateZ(20px); }
   .team-card .name { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
   .team-card .role { font-size: 14px; color: #60a5fa; font-weight: 600; }
+  .custom-status { font-size: 12px; color: #94a3b8; margin-top: 4px; font-style: italic; }
 </style>
 </head>
 <body>
@@ -244,31 +387,49 @@
   </header>
 
   <section id="home">
-    <div class="badge">Roblox Game Studio</div>
-    <div id="groupName">Loading...</div>
-    <div class="stat-row" id="statRow">
-      <div class="stat-cell"><div class="num" id="memberCount">—</div><div class="lbl">Members</div></div>
-      <div class="stat-cell"><div class="num" id="totalVisits">—</div><div class="lbl">Total Visits</div></div>
-      <div class="stat-cell"><div class="num" id="totalPlaying">—</div><div class="lbl">Playing Now</div></div>
-      <div class="stat-cell"><div class="num" id="peakCCU">1.2K+</div><div class="lbl">Peak CCU</div></div>
+    <div class="badge reveal">Roblox Game Studio</div>
+    <div id="groupName" class="reveal">Loading...</div>
+    <div class="stat-row reveal" id="statRow">
+      <div class="stat-cell tilt-card">
+        <div class="mouse-glow"></div>
+        <div class="num" id="memberCount">—</div>
+        <div class="lbl">Members</div>
+      </div>
+      <div class="stat-cell tilt-card">
+        <div class="mouse-glow"></div>
+        <div class="num" id="totalVisits">—</div>
+        <div class="lbl">Total Visits</div>
+      </div>
+      <div class="stat-cell tilt-card">
+        <div class="mouse-glow"></div>
+        <div class="num" id="totalPlaying">—</div>
+        <div class="lbl">Playing Now</div>
+      </div>
+      <div class="stat-cell tilt-card">
+        <div class="mouse-glow"></div>
+        <div class="num" id="peakCCU">1.2K+</div>
+        <div class="lbl">Peak CCU</div>
+      </div>
     </div>
   </section>
 
   <section id="games">
-    <h2>Games</h2>
-    <div class="section-sub">Everything we've shipped, with live stats. Click one to play.</div>
+    <h2 class="reveal">Games</h2>
+    <div class="section-sub reveal">Everything we've shipped, with live stats. Click one to play.</div>
     <div class="games-grid" id="gamesGrid"></div>
   </section>
 
-<section id="contact">
-    <h2>Contact</h2>
-    <div class="section-sub">Join our community or reach out directly.</div>
-    <a class="discord-btn" href="https://discord.gg/8N4Cy77Znd" target="_blank" rel="noopener">
+  <section id="contact">
+    <h2 class="reveal">Contact</h2>
+    <div class="section-sub reveal">Join our community or reach out directly.</div>
+    <a class="discord-btn reveal" href="https://discord.gg/8N4Cy77Znd" target="_blank" rel="noopener">
       Join our Discord
     </a>
 
-    <div class="team-label">The Team</div>
-    <div class="team-card">
+    <div class="team-label reveal">The Team</div>
+    <div class="team-card tilt-card reveal">
+      <div class="shine-overlay"></div>
+      <div class="mouse-glow"></div>
       <div class="avatar-wrapper">
         <img id="ownerAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 24 24' fill='%235865F2'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" alt="Owner avatar">
         <span id="statusIndicator" class="status-dot offline" title="Offline"></span>
@@ -281,90 +442,28 @@
     </div>
   </section>
 
-  <!-- CSS additions for Discord Status Dot -->
-  <style>
-    .avatar-wrapper {
-      position: relative;
-      width: 72px;
-      height: 72px;
-    }
-    .avatar-wrapper img {
-      width: 100%;
-      height: 100%;
-      border-radius: 50%;
-      object-fit: cover;
-      background: #222;
-      border: 2px solid rgba(255,255,255,0.1);
-    }
-    .status-dot {
-      position: absolute;
-      bottom: 2px;
-      right: 2px;
-      width: 18px;
-      height: 18px;
-      border-radius: 50%;
-      border: 3px solid #0a0a0c;
-    }
-    .status-dot.online { background-color: #23a55a; }
-    .status-dot.idle { background-color: #f0b232; }
-    .status-dot.dnd { background-color: #f23f43; }
-    .status-dot.offline { background-color: #80848e; }
-    
-    .custom-status {
-      font-size: 12px;
-      color: #94a3b8;
-      margin-top: 2px;
-      font-style: italic;
-    }
-  </style>
-
-  <!-- Place this script block at the bottom -->
   <script>
-    const DISCORD_ID = "YOUR_DISCORD_USER_ID_HERE"; // <--- Put your Discord User ID here
+    const DISCORD_ID = "992125170284253195";
 
-    async function fetchDiscordPresence() {
-      try {
-        const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
-        const data = await res.json();
+    // Scroll Observer for Reveal Animations
+    const observerOptions = {
+      root: null,
+      threshold: 0.15
+    };
 
-        if (data.success && data.data) {
-          const user = data.data.discord_user;
-          const status = data.data.discord_status; // online, idle, dnd, offline
-
-          // Update Avatar (supports animated GIF avatars too)
-          const avatarExtension = user.avatar && user.avatar.startsWith("a_") ? "gif" : "png";
-          const avatarUrl = user.avatar 
-            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${avatarExtension}?size=256`
-            : `https://cdn.discordapp.com/embed/avatars/${(BigInt(user.id) >> 22n) % 6n}.png`;
-          
-          document.getElementById("ownerAvatar").src = avatarUrl;
-          document.getElementById("ownerName").textContent = user.global_name || user.username;
-
-          // Update Status Dot Indicator
-          const dot = document.getElementById("statusIndicator");
-          dot.className = `status-dot ${status}`;
-          dot.title = status.toUpperCase();
-
-          // Optional: Display active game activity or status text
-          const customStat = document.getElementById("customStatus");
-          if (data.data.activities && data.data.activities.length > 0) {
-            const act = data.data.activities.find(a => a.type === 0) || data.data.activities[0];
-            customStat.textContent = act.state ? `"${act.state}"` : act.name;
-          } else {
-            customStat.textContent = status === "offline" ? "Currently Offline" : status.toUpperCase();
-          }
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('active');
         }
-      } catch (err) {
-        console.error("Lanyard status fetch failed:", err);
-      }
+      });
+    }, observerOptions);
+
+    function initRevealAnimations() {
+      document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
     }
 
-    fetchDiscordPresence();
-    // Refresh status every 30 seconds
-    setInterval(fetchDiscordPresence, 30000);
-  </script>
-
-  <script>
+    // Fetch Roblox Group Game Stats
     fetch("/api/stats?type=groupGames&groupId=936632772")
       .then(r => r.json())
       .then(data => {
@@ -383,7 +482,6 @@
         document.getElementById("totalVisits").textContent = totalVisits.toLocaleString();
         document.getElementById("totalPlaying").textContent = totalPlaying.toLocaleString();
 
-        // Dynamic Peak CCU Logic
         const defaultPeak = 1200;
         if (totalPlaying > defaultPeak) {
           document.getElementById("peakCCU").textContent = totalPlaying.toLocaleString();
@@ -394,15 +492,17 @@
         const grid = document.getElementById("gamesGrid");
         grid.innerHTML = "";
 
-        data.games.forEach(g => {
+        data.games.forEach((g, index) => {
           const card = document.createElement("a");
-          card.className = "game-card";
-          // Fixed Robox Game Link format
+          card.className = "game-card tilt-card reveal";
+          card.style.transitionDelay = `${(index % 3) * 0.12}s`; // Stagger delay
           const placeId = g.placeId || g.rootPlaceId || "";
           card.href = placeId ? `https://www.roblox.com/games/${placeId}` : "#";
           card.target = "_blank";
           card.rel = "noopener";
           card.innerHTML = `
+            <div class="shine-overlay"></div>
+            <div class="mouse-glow"></div>
             <img class="bg-img" src="${g.icon || ''}" alt="${g.name}" onerror="this.style.opacity='0.2'">
             <div class="gradient-overlay"></div>
             <div class="info">
@@ -416,13 +516,80 @@
           `;
           grid.appendChild(card);
         });
+
+        init3DTilt();
+        initRevealAnimations();
       })
       .catch(err => {
         document.getElementById("groupName").textContent = "Error loading stats";
         document.getElementById("gamesGrid").innerHTML = `<div style="color:#f87171;font-size:14px;">Failed to load games: ${err.message}</div>`;
       });
 
-    // Star background animation logic
+    // Fetch Discord Presence via Lanyard API
+    async function fetchDiscordPresence() {
+      try {
+        const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
+        const data = await res.json();
+
+        if (data.success && data.data) {
+          const user = data.data.discord_user;
+          const status = data.data.discord_status;
+
+          const avatarExtension = user.avatar && user.avatar.startsWith("a_") ? "gif" : "png";
+          const avatarUrl = user.avatar 
+            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${avatarExtension}?size=256`
+            : `https://cdn.discordapp.com/embed/avatars/${(BigInt(user.id) >> 22n) % 6n}.png`;
+          
+          document.getElementById("ownerAvatar").src = avatarUrl;
+          document.getElementById("ownerName").textContent = user.global_name || user.username;
+
+          const dot = document.getElementById("statusIndicator");
+          dot.className = `status-dot ${status}`;
+          dot.title = status.toUpperCase();
+
+          const customStat = document.getElementById("customStatus");
+          if (data.data.activities && data.data.activities.length > 0) {
+            const act = data.data.activities.find(a => a.type === 0) || data.data.activities[0];
+            customStat.textContent = act.state ? `"${act.state}"` : act.name;
+          } else {
+            customStat.textContent = status === "offline" ? "Offline" : status.toUpperCase();
+          }
+        }
+      } catch (err) {
+        console.error("Lanyard error:", err);
+      }
+    }
+    fetchDiscordPresence();
+    setInterval(fetchDiscordPresence, 30000);
+
+    // 3D Perspective Tilt & Interactive Light Glow Tracking
+    function init3DTilt() {
+      const cards = document.querySelectorAll('.tilt-card');
+      
+      cards.forEach(card => {
+        card.addEventListener('mousemove', (e) => {
+          const rect = card.getBoundingClientRect();
+          const x = e.clientX - rect.left;
+          const y = e.clientY - rect.top;
+          
+          const centerX = rect.width / 2;
+          const centerY = rect.height / 2;
+          
+          const rotateX = ((y - centerY) / centerY) * -16;
+          const rotateY = ((x - centerX) / centerX) * 16;
+          
+          card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateZ(12px)`;
+          card.style.setProperty('--mouse-x', `${x}px`);
+          card.style.setProperty('--mouse-y', `${y}px`);
+        });
+
+        card.addEventListener('mouseleave', () => {
+          card.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) translateZ(0px)`;
+        });
+      });
+    }
+
+    // Star Canvas Background
     const canvas = document.getElementById("starCanvas");
     const ctx = canvas.getContext("2d");
     let vw, vh, docH, stars;
@@ -482,6 +649,8 @@
 
     resize();
     animate();
+    init3DTilt();
+    initRevealAnimations();
   </script>
 </body>
 </html>
