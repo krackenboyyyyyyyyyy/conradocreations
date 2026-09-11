@@ -260,7 +260,7 @@
     <div class="games-grid" id="gamesGrid"></div>
   </section>
 
-  <section id="contact">
+<section id="contact">
     <h2>Contact</h2>
     <div class="section-sub">Join our community or reach out directly.</div>
     <a class="discord-btn" href="https://discord.gg/8N4Cy77Znd" target="_blank" rel="noopener">
@@ -269,13 +269,100 @@
 
     <div class="team-label">The Team</div>
     <div class="team-card">
-      <img id="ownerAvatar" src="https://cdn.discordapp.com/embed/avatars/0.png" alt="Owner avatar" onerror="this.onerror=null;this.src='data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'72\' height=\'72\' viewBox=\'0 0 24 24\' fill=\'%235865F2\'%3E%3Ccircle cx=\'12\' cy=\'12\' r=\'12\'/%3E%3C/svg%3E';">
+      <div class="avatar-wrapper">
+        <img id="ownerAvatar" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 24 24' fill='%235865F2'%3E%3Ccircle cx='12' cy='12' r='12'/%3E%3C/svg%3E" alt="Owner avatar">
+        <span id="statusIndicator" class="status-dot offline" title="Offline"></span>
+      </div>
       <div class="details">
-        <div class="name">Owner</div>
+        <div class="name" id="ownerName">Owner</div>
         <div class="role">Owner & Lead Developer</div>
+        <div class="custom-status" id="customStatus">Loading status...</div>
       </div>
     </div>
   </section>
+
+  <!-- CSS additions for Discord Status Dot -->
+  <style>
+    .avatar-wrapper {
+      position: relative;
+      width: 72px;
+      height: 72px;
+    }
+    .avatar-wrapper img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #222;
+      border: 2px solid rgba(255,255,255,0.1);
+    }
+    .status-dot {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      border: 3px solid #0a0a0c;
+    }
+    .status-dot.online { background-color: #23a55a; }
+    .status-dot.idle { background-color: #f0b232; }
+    .status-dot.dnd { background-color: #f23f43; }
+    .status-dot.offline { background-color: #80848e; }
+    
+    .custom-status {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 2px;
+      font-style: italic;
+    }
+  </style>
+
+  <!-- Place this script block at the bottom -->
+  <script>
+    const DISCORD_ID = "YOUR_DISCORD_USER_ID_HERE"; // <--- Put your Discord User ID here
+
+    async function fetchDiscordPresence() {
+      try {
+        const res = await fetch(`https://api.lanyard.rest/v1/users/${DISCORD_ID}`);
+        const data = await res.json();
+
+        if (data.success && data.data) {
+          const user = data.data.discord_user;
+          const status = data.data.discord_status; // online, idle, dnd, offline
+
+          // Update Avatar (supports animated GIF avatars too)
+          const avatarExtension = user.avatar && user.avatar.startsWith("a_") ? "gif" : "png";
+          const avatarUrl = user.avatar 
+            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.${avatarExtension}?size=256`
+            : `https://cdn.discordapp.com/embed/avatars/${(BigInt(user.id) >> 22n) % 6n}.png`;
+          
+          document.getElementById("ownerAvatar").src = avatarUrl;
+          document.getElementById("ownerName").textContent = user.global_name || user.username;
+
+          // Update Status Dot Indicator
+          const dot = document.getElementById("statusIndicator");
+          dot.className = `status-dot ${status}`;
+          dot.title = status.toUpperCase();
+
+          // Optional: Display active game activity or status text
+          const customStat = document.getElementById("customStatus");
+          if (data.data.activities && data.data.activities.length > 0) {
+            const act = data.data.activities.find(a => a.type === 0) || data.data.activities[0];
+            customStat.textContent = act.state ? `"${act.state}"` : act.name;
+          } else {
+            customStat.textContent = status === "offline" ? "Currently Offline" : status.toUpperCase();
+          }
+        }
+      } catch (err) {
+        console.error("Lanyard status fetch failed:", err);
+      }
+    }
+
+    fetchDiscordPresence();
+    // Refresh status every 30 seconds
+    setInterval(fetchDiscordPresence, 30000);
+  </script>
 
   <script>
     fetch("/api/stats?type=groupGames&groupId=936632772")
